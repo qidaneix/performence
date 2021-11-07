@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <style>
+      .wrp1 {
+        display: flex;
+        flex-direction: column;
+        margin: 50px;
+        background-color: aquamarine;
+      }
+      .item {
+        margin: 50px;
+        width: 50px;
+        height: 50px;
+        background-color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrp1">
+      <div class="item"></div>
+      <div class="item"></div>
+      <div class="item"></div>
+    </div>
+    <div class="wrp1"></div>
+    <div id="root"></div>
+
+    <script>
+      const observer = new PerformanceObserver((list) => {
+        list
+          .getEntries()
+          .map((entry) => JSON.stringify(entry, null, 2))
+          .forEach((i) => console.log(i));
+      });
+      observer.observe({
+        entryTypes: ["paint", "measure"],
+      });
+      function randomHexColor() {
+        return (
+          "#" +
+          ("0000" + ((Math.random() * 0x1000000) << 0).toString(16)).substr(-6)
+        );
+      }
+      var root = document.getElementById("root");
+      performance.mark("startWork");
+      for (var i = 0; i < 100000; i++) {
+        k = performance.now();
+        var el = document.createElement("div");
+        el.innerHTML = k;
+        root.appendChild(el);
+        el.style.cssText = `background:${randomHexColor()};height:40px`;
+      }
+      performance.mark("endWork");
+      performance.measure("work", "startWork", "endWork", "paint");
+      // performance
+      //   .getEntries()
+      //   .map((entry) => JSON.stringify(entry, null, 2))
+      //   .forEach((json) => console.log(json));
+
+      // new PerformanceObserver((list) => {
+      //   for (const entry of list.getEntries()) {
+      //     console.log("FP: ", entry.startTime);
+      //   }
+      // }).observe({
+      //   type: "first-paint",
+      //   buffered: true,
+      // });
+    </script>
+    <script>
+      (function () {
+        var script = document.createElement("script");
+        script.src = "https://unpkg.com/web-vitals/dist/web-vitals.iife.js";
+        script.onload = function () {
+          // When loading `web-vitals` using a classic script, all the public
+          // methods can be found on the `webVitals` global namespace.
+          webVitals.getCLS(console.log);
+          webVitals.getFID(console.log);
+          webVitals.getLCP(console.log);
+        };
+        document.head.appendChild(script);
+      })();
+    </script>
+  </body>
+</html>
